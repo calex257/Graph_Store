@@ -1,0 +1,61 @@
+Timp implementare: 12 ore
+
+Nota: Dijkstra, Kosaraju, DFS si majoritatea celorlalte functii specifice
+    grafurilor sunt preluate si adaptate din laborator, laborator facut
+    prin convertirea pseudocodului in cod C. Functiile pentru stiva si coada
+    sunt de asemenea preluate din laboratoare anterioare si consider ca sunt
+    suficient de straightforward pentru a nu necesita comentarii sau explicatii
+    suplimentare, avand nume sugestive. Am doua implementari pentru coada, una
+    generica si una in care elementul este de tip int pentru ca aveam nevoie la
+    task3 de o coada generica si nu voiam sa modific coada si stiva folosite la
+    celelalte task-uri pentru a nu strica ce functiona deja.
+
+    Pentru citirea datelor am folosit un buffer, functia fgets si apoi sscanf din
+    buffer pentru datele utile.
+
+    Exista functii de afisare care nu sunt apelate vreodata de program dar care
+    au fost folosite pentru debugging/sunt ramase din laboratoare.
+
+Task 1:
+    E in principal algortimul lui Dijkstra adaptat din laborator. Am folosit
+    un vector de parinti pentru a putea reconstrui traseul recursiv dupa
+    ce am aflat distanta minima.
+
+Task 2:
+    Am folosit algortimul lui Kosaraju adaptat din laborator. Fiecare componenta
+    tare conexa e reprezentata intr-un bitmask, la fel ca si vectorul visited
+    in care este tinuta evidenta nodurilor vizitate dupa un DFS. Am pus in bitmask
+    in ordine inversa fata de cea normala, nodurile cu index mic in graf fiind
+    mai aproape de MSB. Dupa primul DFS fac graful transpus si pentru fiecare
+    nod nevizitat din stiva fac cate un DFS pe graful transpus. Pentru asta
+    folosesc un alt bitmask pentru a retine ce noduri sunt vizitate. Retin
+    starea de dinainte de DFS si o compar cu cea de dupa DFS, componenta conexa
+    fiind starea_precedenta^starea_actuala(folosesc operatorul XOR). Sortez
+    vectorul de bitmask-uri folosind functia quicksort si afisez fiecare
+    componenta in parte.
+
+Task 3:
+    Am urmat algortimul din hint usor modificat/completat. Pe langa masca si
+    numarul nodului am stocat in coada si costul pentru a ajunge in acea stare.
+    Pentru a avea informatiile acestea grupate am definit o structura node_state
+    cu campurile anterior mentionate. Pe baza nodurilor incluse am calculat atat
+    starea ideala care reprezinta solutia cat si domeniul(componenta conexa) pe care
+    se lucreaza. Am folosit doua cozi, una care sa retina toate starile vizitate
+    anterior si alta in care sunt starile de vizitat. Am iterat cat timp coada
+    cu starile de vizitat nu era goala si am verificat pe rand fiecare prim element
+    scoatandu-l din coada la finalul fiecarei iteratii.
+    
+    Conditiile pentru a fi adaugat in coada de vizitare sunt daca nu a fost vizitat
+    deja si daca se afla in domeniul cerut.
+    Conditia pentru a determina daca a fost vizitat deja este
+    daca in coada de vizitate se mai afla un nod cu aceeasi stare, acelasi numar 
+    al nodului si un cost mai mare sau egal cu cel al elementului curent(pentru a
+    permite optimizari ale traseului). Pentru a calcula domeniul am facut un sau(|)
+    pe biti intre masca in care retin care noduri sunt depozite si masca in 
+    care retin ce noduri trebuie incluse. Pentru a verifica daca un element este
+    in domeniu practic am facut reuniunea dintre masca elementului si masca domeniului.
+
+    Acest rezultat trebuie mereu sa fie egal cu masca domeniului, in caz contrar
+    elementul nefiind in domeniu. Un element este solutie daca masca lui este egala
+    cu cea ideala si daca numarul nodului este egal cu cel din cea ideala si pentru
+    solutii am gasit-o pe cea de cost minim.
